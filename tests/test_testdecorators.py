@@ -283,3 +283,11 @@ def test_does_not_print_on_success():
 @given(sampled_from([1]))
 def test_can_sample_from_single_element(x):
     assert x == 1
+
+
+def test_errors_when_given_varargs():
+    with pytest.raises(TypeError) as e:
+        @given(int)
+        def has_varargs(*args):
+            pass
+    assert 'varargs' in e.value.args[0]
