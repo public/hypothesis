@@ -4,7 +4,9 @@ from hypothesis.internal.utils.reflection import (
     get_pretty_function_description,
     function_digest,
     arg_string,
+    copy_argspec
 )
+import inspect
 import pytest
 
 
@@ -290,3 +292,43 @@ def test_arg_string_does_not_include_unprovided_defaults():
         pass
 
     assert arg_string(foo, (1,), {'b': 1, 'd': 11}) == 'a=1, b=1, d=11'
+
+
+def universal_acceptor(*args, **kwargs):
+    return args, kwargs
+
+
+def has_one_arg(hello):
+    pass
+
+
+def has_two_args(hello, world):
+    pass
+
+
+def has_a_default(x, y, z=1):
+    pass
+
+
+def has_varargs(*args):
+    pass
+
+
+def has_kwargs(**kwargs):
+    pass
+
+
+@pytest.mark.parametrize(
+    'f', [has_one_arg, has_two_args, has_varargs, has_kwargs]
+)
+def test_copying_preserves_argspec(f):
+    af = inspect.getargspec(f)
+    t = copy_argspec('foo', inspect.getargspec(f))(universal_acceptor)
+    at = inspect.getargspec(t)
+    assert af == at
+
+
+def test_copying_sets_name():
+    f = copy_argspec(
+        'hello_world', inspect.getargspec(has_two_args))(universal_acceptor)
+    assert f.__name__ == 'hello_world'
