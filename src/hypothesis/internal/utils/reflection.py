@@ -300,7 +300,7 @@ def accept(f):
     def %(name)s(%(argspec)s):
         return f(%(invocation)s)
     return %(name)s
-"""
+""".strip() + "\n"
 
 
 def copy_argspec(name, argspec):
