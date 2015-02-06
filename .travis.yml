@@ -1,11 +1,13 @@
 language: c
 
-env: PYTHONDONTWRITEBYTECODE=x
+cache:
+    directories:
+        - $HOME/.pyenv
 
 before_script:
   - ./ci/ci-install.sh
 
 script:
-    - ./ci/full-ci.sh python2.7
-    - ./ci/full-ci.sh python3.3
-    - ./ci/full-ci.sh python3.4
+    - ./ci/full-ci.sh ~/.pyenv/versions/2.7.9/bin/python
+    - ./ci/full-ci.sh ~/.pyenv/versions/3.3.6/bin/python
+    - ./ci/full-ci.sh ~/.pyenv/versions/3.4.2/bin/python
