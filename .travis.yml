@@ -1,13 +1,15 @@
 language: c
 
+os:
+    - linux
+    - osx
+
 cache:
     directories:
         - $HOME/.pyenv
 
-before_script:
-  - ./ci/ci-install.sh
-
 script:
+    - ./ci/ci-install.sh
     - ./ci/full-ci.sh ~/.pyenv/versions/2.7.9/bin/python
     - ./ci/full-ci.sh ~/.pyenv/versions/3.3.6/bin/python
     - ./ci/full-ci.sh ~/.pyenv/versions/3.4.2/bin/python
