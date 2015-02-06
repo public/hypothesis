@@ -1,24 +1,5 @@
 set -e -o xtrace
 
-VENV=$(mktemp -d)
-
-CURRENT_PYTHON=$(which python)
-
-rm -rf ./dist
-virtualenv $VENV  --python=$CURRENT_PYTHON
-BINDIR=$VENV/bin
-PYTHON=$BINDIR/python
-
-CURRENT_VERSION=$($CURRENT_PYTHON --version 2>&1)
-VENV_VERSION=$($PYTHON --version 2>&1)
-
-if [ "$CURRENT_VERSION" != "$VENV_VERSION" ]
-then
-  exit 1
-fi
-
-PIP=$BINDIR/pip
-
 # Make sure hypothesis is not on the path
 $PYTHON -c '
 import sys

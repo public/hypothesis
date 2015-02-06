@@ -1,9 +1,11 @@
-set -o xtrace
+set -o xtrace -e
 
-export PYTHONDONTWRITEBYTECODE=x
 export HYPOTHESIS_DATABASE_FILE=$(mktemp --suffix=.db)
-PYTHONPATH=src python -u -m coverage run -a --branch --include 'src/hypothesis/*' --omit 'src/hypothesis/settings.py,src/hypothesis/internal/compat.py' $(which py.test) -v tests --ignore=tests/test_recursively.py
-PYTHONPATH=src python -c '
+PYTHONPATH=src $PYTHON -u -m coverage run -a --branch \
+    --include 'src/hypothesis/*' \
+    --omit 'src/hypothesis/settings.py,src/hypothesis/internal/compat.py'\
+    -m pytest -v tests --ignore=tests/test_recursively.py
+PYTHONPATH=src $PYTHON -c '
 from __future__ import print_function
 
 from hypothesis.database import ExampleDatabase
@@ -20,4 +22,7 @@ if not data:
     print("No integer examples in database")
     sys.exit(1)
 '
-PYTHONPATH=src python -u -m coverage run -a --branch --include 'src/hypothesis/*' --omit 'src/hypothesis/settings.py,src/hypothesis/internal/compat.py' $(which py.test) -v tests --ignore=tests/test_recursively.py
+PYTHONPATH=src $PYTHON -u -m coverage run -a --branch \
+    --include 'src/hypothesis/*' \
+    --omit 'src/hypothesis/settings.py,src/hypothesis/internal/compat.py'\
+    -m pytest -v tests --ignore=tests/test_recursively.py
